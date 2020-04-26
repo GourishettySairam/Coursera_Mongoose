@@ -15,11 +15,27 @@ connect.then((db) => {
     })
     .then((dish) => {
             console.log(dish);
-            return Dishes.find({}).exec();
+            return Dishes.findByIdAndUpdate(dish._id,
+              {
+                $set: { description: 'Updated test'}
+              },
+              {
+                new: true
+              })
+              .exec();
         })
-        .then((dishes) => {
+        .then((dish) => {
+        dish.comments.push({
+            rating: 5,
+            comment: 'I\'m getting a sinking feeling!',
+            author: 'Leonardo di Carpaccio'
+        });
+        return dish.save();
+    })
+        .then((dish) => {
             console.log("removing dishes");
-            console.log(dishes);
+            console.log(dish);
+            console.log(dish.comments);
             return Dishes.remove({});
         })
         .then(() => {
